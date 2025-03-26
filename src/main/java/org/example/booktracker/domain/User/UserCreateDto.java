@@ -1,4 +1,4 @@
-package org.example.booktracker.domain;
+package org.example.booktracker.domain.User;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

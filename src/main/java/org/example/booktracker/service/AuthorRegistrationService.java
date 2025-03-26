@@ -1,49 +1,43 @@
 package org.example.booktracker.service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.example.booktracker.domain.User.UserCreateDto;
+import org.example.booktracker.domain.Author.AuthorCreateDto;
+import org.example.booktracker.mapper.AuthorMapper;
 import org.example.booktracker.mapper.SuccessCreatedMapper;
-import org.example.booktracker.mapper.UserMapper;
-import org.example.booktracker.repository.UserRepository;
+import org.example.booktracker.repository.AuthorRepository;
 import org.example.booktracker.utils.ConstantMessages;
 import org.example.booktracker.utils.SuccessCreated;
 import org.example.booktracker.utils.UtilsMethods;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserRegistrationService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
+public class AuthorRegistrationService {
+    private final AuthorRepository authorRepository;
     private final SuccessCreatedMapper successCreatedMapper;
     private final UtilsMethods utilsMethods;
+    private final AuthorMapper authorMapper;
 
     // static final values
     private static final LocalDateTime dateTime = LocalDateTime.now();
 
     @Transactional
-    public SuccessCreated saveUser(
-            UserCreateDto user
+    public SuccessCreated saveAuthor(
+            AuthorCreateDto authorCreateDto
     ) {
-        utilsMethods.isExistsByEmail(user.email());
+        utilsMethods.isExistsByEmail(authorCreateDto.email());
 
-        var savedUser = userRepository.save(
-                userMapper.toEntity(user, passwordEncoder.encode(user.password()))
+        var savedAuthor = authorRepository.save(
+                authorMapper.toEntity(authorCreateDto)
         );
 
         return successCreatedMapper.toSuccessCreated(
-                savedUser.toString(),
+                savedAuthor.toString(),
                 ConstantMessages.USER_SUCCESS_CREATED.getDescription(),
                 dateTime.toString()
         );
     }
-
-
 }

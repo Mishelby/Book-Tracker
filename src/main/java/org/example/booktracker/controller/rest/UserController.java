@@ -2,7 +2,7 @@ package org.example.booktracker.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.booktracker.domain.UserProfileInfoDto;
+import org.example.booktracker.domain.User.UserProfileInfoDto;
 import org.example.booktracker.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

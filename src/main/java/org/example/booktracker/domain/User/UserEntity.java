@@ -1,4 +1,4 @@
-package org.example.booktracker.domain;
+package org.example.booktracker.domain.User;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString(of = {"username", "email"})
+@Inheritance(strategy = InheritanceType.JOINED)
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

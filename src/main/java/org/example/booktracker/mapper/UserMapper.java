@@ -1,8 +1,8 @@
 package org.example.booktracker.mapper;
 
-import org.example.booktracker.domain.UserCreateDto;
-import org.example.booktracker.domain.UserEntity;
-import org.example.booktracker.domain.UserProfileInfoDto;
+import org.example.booktracker.domain.User.UserCreateDto;
+import org.example.booktracker.domain.User.UserEntity;
+import org.example.booktracker.domain.User.UserProfileInfoDto;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")

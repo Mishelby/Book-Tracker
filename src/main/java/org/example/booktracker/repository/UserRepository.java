@@ -1,6 +1,6 @@
 package org.example.booktracker.repository;
 
-import org.example.booktracker.domain.UserEntity;
+import org.example.booktracker.domain.User.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
