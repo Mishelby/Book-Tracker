@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: booktracker-db
+    restart: always
+    environment:
+      POSTGRES_DB: books
+      POSTGRES_USER: postgresql
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:

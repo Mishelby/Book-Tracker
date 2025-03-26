@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: BookTracker
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/books
+    username: postgresql
+    password: mysecretpassword
+
+  jpa:
+    properties:
+      hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
