@@ -8,6 +8,7 @@ import org.example.booktracker.repository.AuthorRepository;
 import org.example.booktracker.utils.ConstantMessages;
 import org.example.booktracker.utils.SuccessCreated;
 import org.example.booktracker.utils.UtilsMethods;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthorRegistrationService {
     private final AuthorRepository authorRepository;
+    private final PasswordEncoder passwordEncoder;
     private final SuccessCreatedMapper successCreatedMapper;
     private final UtilsMethods utilsMethods;
     private final AuthorMapper authorMapper;
@@ -31,7 +33,7 @@ public class AuthorRegistrationService {
         utilsMethods.isExistsByEmail(authorCreateDto.email());
 
         var savedAuthor = authorRepository.save(
-                authorMapper.toEntity(authorCreateDto)
+                authorMapper.toEntity(authorCreateDto, passwordEncoder.encode(authorCreateDto.password()))
         );
 
         return successCreatedMapper.toSuccessCreated(

@@ -15,9 +15,10 @@ import java.util.List;
 public interface AuthorMapper {
 
     @Mapping(target = "name", source = "authorCreateDto.name")
+    @Mapping(target = "password", source = "encodedPassword")
     @Mapping(target = "books", expression = "java(initializeBookList(authorEntity))")
     @Mapping(target = "status", expression = "java(setUserStatus())")
-    AuthorEntity toEntity(AuthorCreateDto authorCreateDto);
+    AuthorEntity toEntity(AuthorCreateDto authorCreateDto, String encodedPassword);
 
     default List<AuthorBookEntity> initializeBookList(@TargetType AuthorEntity authorEntity) {
         if (authorEntity.getBooks() == null) authorEntity.setBooks(new ArrayList<>());
