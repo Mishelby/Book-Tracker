@@ -6,6 +6,11 @@ spring:
     suffix: .html
     cache: false
 
+  logging:
+    level:
+      root: INFO
+      org.springframework: DEBUG
+
   datasource:
     url: jdbc:postgresql://localhost:5434/books
     username: postgresql
@@ -18,3 +23,16 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+  mail:
+    host: smtp.yandex.ru
+    port: 587
+    username: lorestatys@yandex.ru
+    password: adkitypqxwowwzyl
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+          ssl.enable: false
+
