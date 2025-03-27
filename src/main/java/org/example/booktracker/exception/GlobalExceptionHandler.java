@@ -12,16 +12,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(
             value = {
-                    UserAlreadyExists.class
+                    UserAlreadyExists.class,
+                    BookAlreadyExists.class,
             }
     )
     public ResponseEntity<ErrorMessageResponse> handleException(
-            UserAlreadyExists exception
+            Exception exception
     ) {
         var errorMessageResponse = new ErrorMessageResponse(
                 exception.getMessage(),
                 LocalDateTime.now().toString()
         );
+        return new ResponseEntity<>(errorMessageResponse, HttpStatus.BAD_REQUEST) ;
+    }
+
+
+    @ExceptionHandler(AuthorBookAlreadyExists.class)
+    public ResponseEntity<ErrorMessageResponse> handleException(
+            AuthorBookAlreadyExists exception
+    ){
+        var errorMessageResponse = new ErrorMessageResponse(
+                exception.getMessage(),
+                LocalDateTime.now().toString()
+        );
+
         return new ResponseEntity<>(errorMessageResponse, HttpStatus.BAD_REQUEST) ;
     }
 }

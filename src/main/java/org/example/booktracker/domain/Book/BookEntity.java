@@ -3,12 +3,16 @@ package org.example.booktracker.domain.Book;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.booktracker.domain.Author.AuthorEntity;
+import lombok.ToString;
+import org.example.booktracker.domain.AuthorBook.AuthorBookEntity;
+
+import java.util.List;
 
 @Entity
 @Table(name = "book")
 @Getter
 @Setter
+@ToString(of = {"name", "description", "article"})
 public class BookEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,21 +24,18 @@ public class BookEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    private AuthorEntity author;
-
-    @Column(name = "article")
+    @Column(name = "article", unique = true)
     private String article;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AuthorBookEntity> authors;
 
     public BookEntity(
             String name,
-            String description,
-            AuthorEntity author
+            String description
     ) {
         this.name = name;
         this.description = description;
-        this.author = author;
     }
 
     public BookEntity() {}

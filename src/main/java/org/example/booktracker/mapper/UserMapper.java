@@ -18,16 +18,10 @@ public interface UserMapper {
 
     @Mapping(target = "userName", source = "userEntity.username")
     @Mapping(target = "email", source = "userEntity.email")
-    @Mapping(target = "countOfBooks", expression = "java(getCountOfBooks(userEntity))")
     @Mapping(target = "status", expression = "java(getUserStatus(userEntity))")
     UserProfileInfoDto toDto(UserEntity userEntity);
-
-    default Integer getCountOfBooks(UserEntity userEntity) {
-        return 0;
-    }
 
     default String getUserStatus(UserEntity userEntity) {
         return "Нет текущего статуса!";
     }
-
 }
