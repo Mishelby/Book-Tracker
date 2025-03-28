@@ -1,6 +1,6 @@
 package org.example.booktracker.repository;
 
-import org.example.booktracker.domain.AuthorBook.AuthorBookEntity;
+import org.example.booktracker.domain.authorBook.AuthorBookEntity;
 import org.example.booktracker.utils.AuthorBookId;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

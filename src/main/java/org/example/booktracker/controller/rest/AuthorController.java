@@ -3,6 +3,7 @@ package org.example.booktracker.controller.rest;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.booktracker.domain.author.AuthorProfileDto;
 import org.example.booktracker.service.AuthorService;
 import java.util.logging.Logger;
 
@@ -17,6 +18,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthorController {
     final Logger logger = Logger.getLogger(AuthorController.class.getName());
     private final AuthorService authorService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AuthorProfileDto> getAuthorProfile(
+            @PathVariable("id") Long id
+    ) {
+        logger.info(() -> "Get request for author profile with id = %s".formatted(id));
+        return ResponseEntity.ok().body(authorService.findAuthorProfile(id));
+    }
 
     @PostMapping("/{id}/{book_id}")
     public ResponseEntity<SuccessCreated> addBookForAuthor(

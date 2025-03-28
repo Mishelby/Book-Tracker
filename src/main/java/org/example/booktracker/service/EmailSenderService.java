@@ -1,9 +1,8 @@
 package org.example.booktracker.service;
 
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.booktracker.EvenListener.EmailEvent;
+import org.example.booktracker.evenListener.EmailEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;

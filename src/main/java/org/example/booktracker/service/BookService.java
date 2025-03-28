@@ -1,9 +1,7 @@
 package org.example.booktracker.service;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.RequiredArgsConstructor;
-import org.example.booktracker.domain.Book.BookCreateDto;
-import org.example.booktracker.domain.Book.BookEntity;
+import org.example.booktracker.domain.book.BookCreateDto;
 import org.example.booktracker.mapper.SuccessCreatedMapper;
 import org.example.booktracker.repository.BookMapper;
 import org.example.booktracker.repository.BookRepository;

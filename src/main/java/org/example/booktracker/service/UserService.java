@@ -2,7 +2,7 @@ package org.example.booktracker.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.example.booktracker.domain.User.UserProfileInfoDto;
+import org.example.booktracker.domain.user.UserProfileInfoDto;
 import org.example.booktracker.mapper.UserMapper;
 import org.example.booktracker.repository.UserRepository;
 import org.springframework.stereotype.Service;

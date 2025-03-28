@@ -1,4 +1,4 @@
-package org.example.booktracker.domain.User;
+package org.example.booktracker.domain.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;

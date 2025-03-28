@@ -1,10 +1,10 @@
-package org.example.booktracker.domain.Book;
+package org.example.booktracker.domain.book;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.example.booktracker.domain.AuthorBook.AuthorBookEntity;
+import org.example.booktracker.domain.authorBook.AuthorBookEntity;
 
 import java.util.List;
 

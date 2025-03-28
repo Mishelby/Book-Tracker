@@ -1,11 +1,14 @@
 package org.example.booktracker.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.booktracker.EvenListener.EmailEvent;
-import org.example.booktracker.domain.Author.AuthorCreateDto;
+import org.example.booktracker.domain.author.AuthorEntity;
+import org.example.booktracker.domain.city.CityEntity;
+import org.example.booktracker.evenListener.EmailEvent;
+import org.example.booktracker.domain.author.AuthorCreateDto;
 import org.example.booktracker.mapper.AuthorMapper;
 import org.example.booktracker.mapper.SuccessCreatedMapper;
 import org.example.booktracker.repository.AuthorRepository;
+import org.example.booktracker.repository.CityRepository;
 import org.example.booktracker.utils.ConstantMessages;
 import org.example.booktracker.utils.SuccessCreated;
 import org.example.booktracker.utils.UtilsMethods;
@@ -19,14 +22,20 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 public class AuthorRegistrationService {
+    // Repositories
     private final AuthorRepository authorRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final SuccessCreatedMapper successCreatedMapper;
+    private final CityRepository cityRepository;
+
+    // Utils
     private final UtilsMethods utilsMethods;
-    private final AuthorMapper authorMapper;
+    private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher eventPublisher;
 
-    // static final values
+    // Mappers
+    private final AuthorMapper authorMapper;
+    private final SuccessCreatedMapper successCreatedMapper;
+
+    // Static final values
     private static final LocalDateTime dateTime = LocalDateTime.now();
 
     @Transactional
@@ -34,10 +43,13 @@ public class AuthorRegistrationService {
             AuthorCreateDto authorCreateDto
     ) {
         utilsMethods.isExistsByEmail(authorCreateDto.email());
+        var cityEntity = cityRepository.findByName(authorCreateDto.cityName()).orElseThrow();
 
-        var savedAuthor = authorRepository.save(
-                authorMapper.toEntity(authorCreateDto, passwordEncoder.encode(authorCreateDto.password()))
-        );
+        var savedAuthor = authorRepository.save(authorMapper.toEntity(
+                authorCreateDto,
+                passwordEncoder.encode(authorCreateDto.password()),
+                cityEntity
+        ));
 
         eventPublisher.publishEvent(
                 new EmailEvent(

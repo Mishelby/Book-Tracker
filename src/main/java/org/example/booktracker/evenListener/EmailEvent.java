@@ -1,8 +1,7 @@
-package org.example.booktracker.EvenListener;
+package org.example.booktracker.evenListener;
 
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
-
 
 @Getter
 public class EmailEvent extends ApplicationEvent {

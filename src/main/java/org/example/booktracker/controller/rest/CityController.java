@@ -2,8 +2,8 @@ package org.example.booktracker.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.booktracker.domain.book.BookCreateDto;
-import org.example.booktracker.service.BookService;
+import org.example.booktracker.domain.city.CityCreateDto;
+import org.example.booktracker.service.CityService;
 import org.example.booktracker.utils.SuccessCreated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,17 +15,17 @@ import java.util.logging.Logger;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/books")
+@RequestMapping("/api/v1/cities")
 @RequiredArgsConstructor
-public class BookController {
-    final Logger logger = Logger.getLogger(BookController.class.getName());
-    private final BookService bookService;
+public class CityController {
+    final Logger logger = Logger.getLogger(CityController.class.getName());
+    private final CityService cityService;
 
     @PostMapping
-    public ResponseEntity<SuccessCreated> addBook(
-            @RequestBody BookCreateDto bookDto
+    public ResponseEntity<SuccessCreated> createCity(
+            @RequestBody CityCreateDto cityCreateDto
     ) {
-        logger.info(() -> "Post request for creating new bookDto = %s".formatted(bookDto));
-        return ResponseEntity.ok().body(bookService.saveBook(bookDto));
+        logger.info(() -> "Post request for creating city = %s".formatted(cityCreateDto));
+        return ResponseEntity.ok().body(cityService.createCity(cityCreateDto.name()));
     }
 }

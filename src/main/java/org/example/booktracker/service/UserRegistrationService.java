@@ -3,7 +3,7 @@ package org.example.booktracker.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.booktracker.domain.User.UserCreateDto;
+import org.example.booktracker.domain.user.UserCreateDto;
 import org.example.booktracker.mapper.SuccessCreatedMapper;
 import org.example.booktracker.mapper.UserMapper;
 import org.example.booktracker.repository.UserRepository;

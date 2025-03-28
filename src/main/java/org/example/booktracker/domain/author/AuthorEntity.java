@@ -1,10 +1,11 @@
-package org.example.booktracker.domain.Author;
+package org.example.booktracker.domain.author;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.booktracker.domain.AuthorBook.AuthorBookEntity;
-import org.example.booktracker.domain.User.UserEntity;
+import org.example.booktracker.domain.authorBook.AuthorBookEntity;
+import org.example.booktracker.domain.city.CityEntity;
+import org.example.booktracker.domain.user.UserEntity;
 
 import java.util.List;
 
@@ -25,6 +26,10 @@ public class AuthorEntity extends UserEntity{
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AuthorBookEntity> books;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private CityEntity city;
 
     public AuthorEntity(
             String username,

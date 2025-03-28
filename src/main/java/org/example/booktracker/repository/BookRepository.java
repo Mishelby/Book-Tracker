@@ -1,6 +1,6 @@
 package org.example.booktracker.repository;
 
-import org.example.booktracker.domain.Book.BookEntity;
+import org.example.booktracker.domain.book.BookEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

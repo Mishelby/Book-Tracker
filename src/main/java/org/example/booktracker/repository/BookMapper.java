@@ -1,8 +1,8 @@
 package org.example.booktracker.repository;
 
-import org.example.booktracker.domain.AuthorBook.AuthorBookEntity;
-import org.example.booktracker.domain.Book.BookCreateDto;
-import org.example.booktracker.domain.Book.BookEntity;
+import org.example.booktracker.domain.authorBook.AuthorBookEntity;
+import org.example.booktracker.domain.book.BookCreateDto;
+import org.example.booktracker.domain.book.BookEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.TargetType;

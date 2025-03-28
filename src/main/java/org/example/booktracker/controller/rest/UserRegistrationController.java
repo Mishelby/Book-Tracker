@@ -2,7 +2,7 @@ package org.example.booktracker.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.booktracker.domain.User.UserCreateDto;
+import org.example.booktracker.domain.user.UserCreateDto;
 import org.example.booktracker.service.UserRegistrationService;
 import org.example.booktracker.utils.SuccessCreated;
 import org.springframework.http.ResponseEntity;
