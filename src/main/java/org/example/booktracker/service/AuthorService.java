@@ -9,14 +9,19 @@ import org.example.booktracker.mapper.SuccessCreatedMapper;
 import org.example.booktracker.repository.AuthorRepository;
 import org.example.booktracker.repository.BookRepository;
 import org.example.booktracker.utils.*;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class AuthorService {
+    final Logger logger = Logger.getLogger(AuthorService.class.getName());
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
     private final AuthorBookMapper authorBookMapper;
@@ -27,9 +32,11 @@ public class AuthorService {
     private final SuccessCreatedMapper successCreatedMapper;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "authorProfile", key = "#id")
     public AuthorProfileDto findAuthorProfile(
             Long id
     ) {
+        logger.info(() -> "Fetching author profile for id = %s:".formatted(id));
         var authorEntity = authorRepository.findById(id).orElseThrow();
         var weatherDTO = weatherService.getWeather(new CityRequest("Moscow"));
 

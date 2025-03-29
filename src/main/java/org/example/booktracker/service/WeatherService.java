@@ -8,6 +8,7 @@ import org.example.booktracker.utils.WeatherDTO;
 import org.example.booktracker.utils.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -36,6 +37,7 @@ public class WeatherService {
         this.objectMapper = objectMapper;
     }
 
+    @Cacheable(value = "weather", key = "#city")
     public WeatherDTO getWeather(
             CityRequest city
     ) {
