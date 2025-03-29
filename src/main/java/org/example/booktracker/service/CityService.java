@@ -1,6 +1,8 @@
 package org.example.booktracker.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.example.booktracker.domain.city.CityDto;
 import org.example.booktracker.domain.city.CityEntity;
 import org.example.booktracker.repository.CityRepository;
 import org.example.booktracker.utils.SuccessCreated;

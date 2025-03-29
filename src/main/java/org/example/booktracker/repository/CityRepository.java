@@ -17,4 +17,13 @@ public interface CityRepository extends JpaRepository<CityEntity, Long> {
             WHERE c.name = :name                       
             """)
     Optional<CityEntity> findByName(String name);
+
+    @Query("""
+            SELECT c
+            FROM CityEntity c
+            JOIN AuthorEntity ae ON ae.id = :id
+            JOIN CityEntity ce ON ae.city.id = ce.id
+            WHERE ae.id = :id                 
+            """)
+    Optional<CityEntity> findByAuthorId(Long id);
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.example.booktracker.domain.authorBook.AuthorBookEntity;
+import org.example.booktracker.domain.bookGenre.BookGenreEntity;
 
 import java.util.List;
 
@@ -27,15 +28,21 @@ public class BookEntity {
     @Column(name = "article", unique = true)
     private String article;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "genre_id")
+    private BookGenreEntity genre;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AuthorBookEntity> authors;
 
     public BookEntity(
             String name,
-            String description
+            String description,
+            BookGenreEntity bookGenreEntity
     ) {
         this.name = name;
         this.description = description;
+        this.genre = bookGenreEntity;
     }
 
     public BookEntity() {}

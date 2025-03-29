@@ -1,5 +1,6 @@
 package org.example.booktracker.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +31,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthorBookAlreadyExists.class)
     public ResponseEntity<ErrorMessageResponse> handleException(
             AuthorBookAlreadyExists exception
+    ){
+        var errorMessageResponse = new ErrorMessageResponse(
+                exception.getMessage(),
+                LocalDateTime.now().toString()
+        );
+
+        return new ResponseEntity<>(errorMessageResponse, HttpStatus.BAD_REQUEST) ;
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessageResponse> handleException(
+            EntityNotFoundException exception
     ){
         var errorMessageResponse = new ErrorMessageResponse(
                 exception.getMessage(),

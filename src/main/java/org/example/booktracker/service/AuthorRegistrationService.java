@@ -1,5 +1,6 @@
 package org.example.booktracker.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.booktracker.domain.author.AuthorEntity;
 import org.example.booktracker.domain.city.CityEntity;
@@ -43,7 +44,10 @@ public class AuthorRegistrationService {
             AuthorCreateDto authorCreateDto
     ) {
         utilsMethods.isExistsByEmail(authorCreateDto.email());
-        var cityEntity = cityRepository.findByName(authorCreateDto.cityName()).orElseThrow();
+        var cityEntity = cityRepository.findByName(authorCreateDto.cityName()).orElseThrow(
+                () -> new EntityNotFoundException("City with name = %s not found!"
+                        .formatted(authorCreateDto.cityName()))
+        );
 
         var savedAuthor = authorRepository.save(authorMapper.toEntity(
                 authorCreateDto,

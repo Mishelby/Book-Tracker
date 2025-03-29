@@ -14,7 +14,12 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("authorProfile", "weather");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager(
+                "authorProfile",
+                "weather",
+                "authorBooks",
+                "userProfile"
+        );
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .maximumSize(1000));

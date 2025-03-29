@@ -2,6 +2,7 @@ package org.example.booktracker.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.booktracker.domain.author.AuthorProfileDto;
+import org.example.booktracker.domain.city.CityDto;
 import org.example.booktracker.exception.AuthorNotFoundException;
 import org.example.booktracker.exception.BookNotFoundException;
 import org.example.booktracker.mapper.AuthorBookMapper;
@@ -22,12 +23,16 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class AuthorService {
     final Logger logger = Logger.getLogger(AuthorService.class.getName());
+
+    // Repository
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+
+    // Mappers
     private final AuthorBookMapper authorBookMapper;
-    private final WeatherService weatherService;
 
     // Utils
+    private final WeatherService weatherService;
     private final UtilsMethods utilsMethods;
     private final SuccessCreatedMapper successCreatedMapper;
 
@@ -38,7 +43,9 @@ public class AuthorService {
     ) {
         logger.info(() -> "Fetching author profile for id = %s:".formatted(id));
         var authorEntity = authorRepository.findById(id).orElseThrow();
-        var weatherDTO = weatherService.getWeather(new CityRequest("Moscow"));
+        var weatherDTO = weatherService.getWeather(
+                new CityRequest(utilsMethods.getCityByAuthorId(id).name())
+        );
 
         return new AuthorProfileDto(
                 authorEntity.getName(),
@@ -49,6 +56,7 @@ public class AuthorService {
     }
 
     @Transactional
+    @CacheEvict(value = "authorBooks", key = "#authorId")
     public SuccessCreated addBookForAuthor(
             Long authorId,
             Long bookId

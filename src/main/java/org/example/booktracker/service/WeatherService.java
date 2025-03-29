@@ -9,7 +9,11 @@ import org.example.booktracker.utils.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,7 +41,12 @@ public class WeatherService {
         this.objectMapper = objectMapper;
     }
 
-    @Cacheable(value = "weather", key = "#city")
+    @Cacheable(value = "weather", key = "#city.city")
+    @Retryable(
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 5000),
+            retryFor = {IllegalStateException.class, RestClientException.class}
+    )
     public WeatherDTO getWeather(
             CityRequest city
     ) {
@@ -65,7 +74,13 @@ public class WeatherService {
             );
         } catch (JsonProcessingException e) {
             logger.warning(() -> "Got error response = %s".formatted(e.getMessage()));
-            return new WeatherDTO();
+            throw new IllegalStateException("JSON parsing failed = %s".formatted(e.getMessage()));
         }
+    }
+
+    @Recover
+    public WeatherDTO recover(Exception ex, CityRequest city) {
+        logger.info(() -> "Failed to recover weather for city = %s. Cause = %s".formatted(city.getCity(), ex.getMessage()));
+        return new WeatherDTO(0.0, "Ошибка получения данных о погоде!");
     }
 }

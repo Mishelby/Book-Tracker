@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.booktracker.domain.user.UserProfileInfoDto;
 import org.example.booktracker.mapper.UserMapper;
 import org.example.booktracker.repository.UserRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,10 @@ public class UserService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    public UserProfileInfoDto getUserById(Long id) {
+    @Cacheable(value = "userProfile", key = "#id")
+    public UserProfileInfoDto getUserById(
+            Long id
+    ) {
         return userMapper.toDto(
                 userRepository.findById(id).orElseThrow(
                         () -> new EntityNotFoundException(
