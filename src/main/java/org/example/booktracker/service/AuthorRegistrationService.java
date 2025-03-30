@@ -14,6 +14,7 @@ import org.example.booktracker.utils.ConstantMessages;
 import org.example.booktracker.utils.DefaultValues;
 import org.example.booktracker.utils.SuccessCreated;
 import org.example.booktracker.utils.UtilsMethods;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class AuthorRegistrationService {
     private static final LocalDateTime dateTime = LocalDateTime.now();
 
     @Transactional
+    @CacheEvict(value = "startPage", allEntries = true)
     public SuccessCreated saveAuthor(
             AuthorCreateDto authorCreateDto
     ) {

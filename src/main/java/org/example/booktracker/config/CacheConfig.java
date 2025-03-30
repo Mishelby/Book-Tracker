@@ -18,7 +18,8 @@ public class CacheConfig {
                 "authorProfile",
                 "weather",
                 "authorBooks",
-                "userProfile"
+                "userProfile",
+                "startPage"
         );
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)

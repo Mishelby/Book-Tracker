@@ -13,6 +13,7 @@ import org.example.booktracker.repository.*;
 import org.example.booktracker.utils.ConstantMessages;
 import org.example.booktracker.utils.DefaultValues;
 import org.example.booktracker.utils.StartPageDto;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +45,7 @@ public class StartPageService {
 
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "startPage")
     public StartPageDto getStartPage() {
         logger.info(() -> "Collecting information about starting page");
 
