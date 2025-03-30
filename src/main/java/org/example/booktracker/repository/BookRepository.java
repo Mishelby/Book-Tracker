@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
@@ -47,4 +48,19 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
             WHERE abe.author.id = :id                                           
             """)
     List<AuthorBookEntity> findBooksByAuthorId(@Param("id") Long id);
+
+
+    @Query("""
+            SELECT(COUNT(*))
+            FROM BookEntity            
+            """)
+    Optional<Long> countAllBooks();
+
+    @Query("""
+            SELECT DISTINCT b.name
+            FROM BookEntity b   
+            JOIN AuthorBookEntity abe ON abe.author.id = :authorId   
+            WHERE abe.author.id = :authorId                            
+            """)
+    Optional<List<String>> findBestBooks(Long authorId);
 }

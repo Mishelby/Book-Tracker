@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Общие стили */
+        body {
+            font-family: 'Roboto', sans-serif; /* Используем шрифт Roboto */
+            background-color: #f6f6f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: white;
+            color: #333;
+            padding: 20px 0;
+            font-size: 32px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            padding: 30px 0;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 900px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote {
+            font-style: italic;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .author-card {
+            background: #f9f9f9;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .author-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .author-card h3 {
+            margin: 0;
+            font-size: 22px;
+            color: #333;
+        }
+
+        .author-card p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .author-card .rating {
+            font-weight: bold;
+            color: #f39c12;
+        }
+
+        .stat-item {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .stat-item span {
+            font-weight: bold;
+        }
+
+        /* Кнопки */
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #0077ff;
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #005bb5;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h1>Добро пожаловать в BookTracker!</h1>
+</header>
+<main>
+    <div class="container" id="start-content">
+        <p id="start-message">Загрузка...</p>
+        <h2>Лучшие авторы:</h2>
+        <div id="best-authors"></div>
+        <h3>📊 Статистика:</h3>
+        <div class="stat-item">Пользователей: <span id="count-users">-</span></div>
+        <div class="stat-item">Авторов: <span id="count-authors">-</span></div>
+        <div class="stat-item">Книг: <span id="count-books">-</span></div>
+        <p class="quote" id="daily-quote">...</p>
+        <a href="/authors" class="button">Посмотреть всех авторов</a>
+    </div>
+</main>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("/api/v1/start")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("start-message").textContent = data.startMessage || "Добро пожаловать!";
+                document.getElementById("count-users").textContent = data.countOfUsers || "0";
+                document.getElementById("count-authors").textContent = data.countOfAuthors || "0";
+                document.getElementById("count-books").textContent = data.countOfBooks || "0";
+                document.getElementById("daily-quote").textContent = data.dailyQuote || "Цитата дня отсутствует.";
+
+                let authorsContainer = document.getElementById("best-authors");
+                authorsContainer.innerHTML = "";
+                if (data.bestAuthors && data.bestAuthors.length > 0) {
+                    data.bestAuthors.forEach(author => {
+                        let authorCard = document.createElement("div");
+                        authorCard.className = "author-card";
+                        authorCard.innerHTML = `<h3>${author.name} <span class="rating">(⭐ ${author.rating})</span></h3>`;
+                        if (author.bestBooks && author.bestBooks.length > 0) {
+                            authorCard.innerHTML += `<p><strong>Лучшие книги:</strong> ${author.bestBooks.join(", ")}</p>`;
+                        }
+                        authorsContainer.appendChild(authorCard);
+                    });
+                } else {
+                    authorsContainer.innerHTML = "<p>Пока нет лучших авторов.</p>";
+                }
+            })
+            .catch(error => console.error("Ошибка загрузки стартовой информации:", error));
+    });
+</script>
+</body>
+</html>

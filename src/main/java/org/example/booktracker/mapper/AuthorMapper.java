@@ -2,6 +2,7 @@ package org.example.booktracker.mapper;
 
 import org.example.booktracker.domain.author.AuthorCreateDto;
 import org.example.booktracker.domain.author.AuthorEntity;
+import org.example.booktracker.domain.author.BestAuthorDto;
 import org.example.booktracker.domain.authorBook.AuthorBookEntity;
 import org.example.booktracker.domain.city.CityEntity;
 import org.example.booktracker.domain.user.UserStatus;
@@ -33,4 +34,7 @@ public interface AuthorMapper {
     default String setUserStatus() {
         return UserStatus.ACTIVE.getDescription();
     }
+
+
+    BestAuthorDto toDto(AuthorEntity authorEntity, Double rating, List<String> bestBooks);
 }
