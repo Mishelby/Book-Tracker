@@ -8,32 +8,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Общие стили */
         body {
-            font-family: 'Roboto', sans-serif; /* Используем шрифт Roboto */
+            font-family: 'Roboto', sans-serif;
             background-color: #f6f6f6;
             color: #333;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header {
+            width: 100%;
             background-color: white;
             color: #333;
             padding: 20px 0;
-            font-size: 32px;
             text-align: center;
+            font-size: 32px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        main {
-            padding: 30px 0;
+        .container-wrapper {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 30px;
+            align-items: flex-start;
         }
 
         .container {
-            margin: 0 auto;
+            flex: 2;
             padding: 20px;
-            max-width: 900px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .quotes-container {
+            flex: 1;
+            margin-left: 20px;
+            padding: 20px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
@@ -58,33 +73,12 @@
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
 
-        .author-card h3 {
-            margin: 0;
-            font-size: 22px;
-            color: #333;
-        }
-
-        .author-card p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .author-card .rating {
-            font-weight: bold;
-            color: #f39c12;
-        }
-
         .stat-item {
             font-size: 18px;
             margin-bottom: 10px;
             color: #333;
         }
 
-        .stat-item span {
-            font-weight: bold;
-        }
-
-        /* Кнопки */
         .button {
             display: inline-block;
             padding: 10px 20px;
@@ -108,16 +102,22 @@
     <h1>Добро пожаловать в BookTracker!</h1>
 </header>
 <main>
-    <div class="container" id="start-content">
-        <p id="start-message">Загрузка...</p>
-        <h2>Лучшие авторы:</h2>
-        <div id="best-authors"></div>
-        <h3>📊 Статистика:</h3>
-        <div class="stat-item">Пользователей: <span id="count-users">-</span></div>
-        <div class="stat-item">Авторов: <span id="count-authors">-</span></div>
-        <div class="stat-item">Книг: <span id="count-books">-</span></div>
-        <p class="quote" id="daily-quote">...</p>
-        <a href="/authors" class="button">Посмотреть всех авторов</a>
+    <div class="container-wrapper">
+        <div class="container" id="start-content">
+            <p id="start-message">Загрузка...</p>
+            <h2>Лучшие авторы:</h2>
+            <div id="best-authors"></div>
+            <h3>📊 Статистика:</h3>
+            <div class="stat-item">Пользователей: <span id="count-users">-</span></div>
+            <div class="stat-item">Авторов: <span id="count-authors">-</span></div>
+            <div class="stat-item">Книг: <span id="count-books">-</span></div>
+            <p class="quote" id="daily-quote">...</p>
+            <a href="/authors" class="button">Посмотреть всех авторов</a>
+        </div>
+        <div class="quotes-container">
+            <h3>📜 Ежедневные цитаты:</h3>
+            <div id="daily-quotes"></div>
+        </div>
     </div>
 </main>
 <script>
@@ -145,6 +145,19 @@
                     });
                 } else {
                     authorsContainer.innerHTML = "<p>Пока нет лучших авторов.</p>";
+                }
+
+                let dailyQuotesContainer = document.getElementById("daily-quotes");
+                dailyQuotesContainer.innerHTML = "";
+                if (data.dailyQuotes && data.dailyQuotes.length > 0) {
+                    data.dailyQuotes.forEach(quote => {
+                        let quoteCard = document.createElement("div");
+                        quoteCard.className = "author-card";
+                        quoteCard.innerHTML = `<p><strong>${quote.title}</strong> - ${quote.author}</p><p>${quote.description}</p>`;
+                        dailyQuotesContainer.appendChild(quoteCard);
+                    });
+                } else {
+                    dailyQuotesContainer.innerHTML = "<p>Цитаты отсутствуют.</p>";
                 }
             })
             .catch(error => console.error("Ошибка загрузки стартовой информации:", error));

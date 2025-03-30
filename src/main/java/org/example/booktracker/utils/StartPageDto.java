@@ -2,6 +2,7 @@ package org.example.booktracker.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.example.booktracker.domain.author.BestAuthorDto;
+import org.example.booktracker.domain.quotes.DailyQuotesDto;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public record StartPageDto(
        Long countOfUsers,
        Long countOfAuthors,
        Long countOfBooks,
-       String dailyQuote
+       String dailyQuote,
+       List<DailyQuotesDto> dailyQuotes
 ) {
 }
