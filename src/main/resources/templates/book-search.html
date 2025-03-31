@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск книги</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 50px 0;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+
+    .button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .results {
+      margin-top: 20px;
+    }
+
+    .book-item {
+      background-color: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .book-item h3 {
+      margin: 0;
+    }
+
+    .book-item p {
+      margin: 5px 0;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Поиск книги</h1>
+
+  <!-- Форма поиска -->
+  <form action="/search-book" method="get">
+    <input type="text" name="query" class="search-box" placeholder="Введите название книги" required>
+    <button type="submit" class="button">Найти</button>
+  </form>
+
+  <!-- Результаты поиска -->
+  <div class="results">
+    <h2 th:if="${query != null and not #strings.isEmpty(query)}">
+      Результаты поиска для "<span th:text="${query}"></span>"
+    </h2>
+
+    <div th:if="${error}" class="error-message">
+      Ошибка при поиске: <span th:text="${error}"></span>
+    </div>
+    <div th:if="${books != null}">
+      <div th:each="book : ${books}" class="book-item">
+        <h3 th:text="${book.title}">Title</h3>
+        <p><strong>Автор:</strong> <span th:text="${book.authors}">Author</span></p>
+        <p><strong>Дата публикации:</strong> <span th:text="${book.publishedDate}">Date</span></p>
+        <p><strong>Описание:</strong> <span th:text="${book.description}">Description</span></p>
+      </div>
+    </div>
+    <div th:if="${books == null}">
+      <p>Книги не найдены.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

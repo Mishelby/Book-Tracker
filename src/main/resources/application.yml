@@ -40,3 +40,7 @@ spring:
     api_key: 1ec6cf431130ab693b7792bad21c8370
     base_url: https://api.openweathermap.org/data/2.5/weather
 
+  google-books:
+    api_key: AIzaSyCjHyqfxHhPdo5EsVy8e6Hli7S-cyOwVXc
+    base_url: https://www.googleapis.com/books/v1/
+

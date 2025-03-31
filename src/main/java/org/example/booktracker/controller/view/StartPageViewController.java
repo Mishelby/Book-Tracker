@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/start")
 @RequiredArgsConstructor
-public class StartPage {
+public class StartPageViewController {
     private final StartPageService startPageService;
 
     @GetMapping

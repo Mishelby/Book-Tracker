@@ -23,8 +23,8 @@ import java.util.logging.Logger;
 @Service
 public class WeatherService {
     final Logger logger = Logger.getLogger(WeatherService.class.getName());
-    private final String apiKey;
-    private final String baseUrl;
+    private final String API_KEY;
+    private final String BASE_URL;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
@@ -35,8 +35,8 @@ public class WeatherService {
             RestTemplate restTemplate,
             ObjectMapper objectMapper
     ) {
-        this.apiKey = api;
-        this.baseUrl = url;
+        this.API_KEY = api;
+        this.BASE_URL = url;
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
     }
@@ -51,9 +51,9 @@ public class WeatherService {
             CityRequest city
     ) {
         logger.info(() -> "Getting weather for city = %s".formatted(city.getCity()));
-        var url = UriComponentsBuilder.fromUriString(baseUrl)
+        var url = UriComponentsBuilder.fromUriString(BASE_URL)
                 .queryParam("q", city.getCity())
-                .queryParam("appid", apiKey)
+                .queryParam("appid", API_KEY)
                 .queryParam("units", "metric")
                 .build()
                 .toUriString();
