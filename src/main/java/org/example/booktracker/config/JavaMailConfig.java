@@ -33,7 +33,7 @@ public class JavaMailConfig {
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.ssl.enable", "false");  // Выключает SSL, если используешь STARTTLS
+        props.put("mail.smtp.ssl.enable", "false");
 
         return mailSender;
     }

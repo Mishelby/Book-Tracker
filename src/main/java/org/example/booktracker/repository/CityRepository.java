@@ -20,10 +20,9 @@ public interface CityRepository extends JpaRepository<CityEntity, Long> {
 
     @Query("""
             SELECT c
-            FROM CityEntity c
-            JOIN AuthorEntity ae ON ae.id = :id
-            JOIN CityEntity ce ON ae.city.id = ce.id
-            WHERE ae.id = :id                 
+            FROM AuthorEntity ae
+            JOIN CityEntity c ON ae.city.id = c.id
+            WHERE ae.id = :id                                   
             """)
     Optional<CityEntity> findByAuthorId(Long id);
 }

@@ -22,8 +22,10 @@ public class CacheConfig {
                 "startPage"
         );
         cacheManager.setCaffeine(Caffeine.newBuilder()
+                .recordStats()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
-                .maximumSize(1000));
+                .maximumSize(1000)
+        );
         return cacheManager;
     }
 }

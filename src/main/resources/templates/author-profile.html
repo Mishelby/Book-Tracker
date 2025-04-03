@@ -7,21 +7,21 @@
     <link rel="stylesheet" href="/css/style.css">
     <style>
         body {
-            font-family: 'Georgia', serif;
-            background-color: #f5f0e1;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
             margin: 0;
             padding: 0;
             text-align: center;
-            overflow: hidden;
         }
 
         header {
-            background-color: #4A90E2;
-            color: white;
+            background-color: #ffffff;
+            color: #333;
             padding: 20px;
             text-align: center;
             font-size: 24px;
             font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .author-container {
@@ -31,28 +31,27 @@
         }
 
         .author-card {
-            background: white;
+            background: #ffffff;
             padding: 20px;
             width: 350px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            color: #ff6347; /* Томатный */
+            color: #007aff;
             margin-bottom: 15px;
         }
 
         .weather {
             margin-top: 15px;
             padding: 15px;
-            background: #f9f9f9;
-            border-radius: 5px;
+            background: #f1f3f5;
+            border-radius: 8px;
             text-align: left;
-            position: relative;
+            position: relative; /* Добавим относительное позиционирование */
         }
 
-        /* Стили для солнца */
         .sun {
             position: absolute;
             top: -20px;
@@ -65,7 +64,6 @@
             animation: glow 2s ease-in-out infinite;
         }
 
-        /* Анимация излучения от солнца */
         @keyframes glow {
             0% {
                 box-shadow: 0 0 20px rgba(255, 235, 59, 0.8), 0 0 40px rgba(255, 235, 59, 0.5);
@@ -90,26 +88,26 @@
         }
 
         .books-list li {
-            background: #ffebcd; /* Цвет крема */
+            background: #ffffff;
             margin: 5px 0;
             padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
         .show-books-btn {
             margin-top: 15px;
             padding: 10px 15px;
-            background: #ff6347; /* Ярко-красный */
+            background: #007aff;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 6px;
             font-size: 16px;
         }
 
         .show-books-btn:hover {
-            background: #e55347;
+            background: #005ecb;
         }
     </style>
 </head>
@@ -126,24 +124,18 @@
             <p><strong>Книг написано:</strong> <span th:text="${author.countOfBooks}">0</span></p>
             <p><strong>Статус:</strong> <span th:text="${author.status}">Неизвестен</span></p>
 
-            <!-- Блок погоды -->
             <div class="weather">
                 <h3>☀️ Погода:</h3>
                 <p><strong>Температура:</strong> <span id="weather-temp">—</span></p>
                 <p><strong>Описание:</strong> <span id="weather-desc">—</span></p>
-                <!-- Солнце -->
                 <div class="sun"></div>
             </div>
 
-            <!-- Кнопка для показа книг -->
             <button id="show-books-btn" class="show-books-btn">📖 Показать книги</button>
 
-            <!-- Список книг -->
             <div class="books-list" id="books-container" style="display: none;">
                 <h3>📚 Книги автора:</h3>
-                <ul id="books-list">
-                    <!-- Список книг будет заполняться JavaScript -->
-                </ul>
+                <ul id="books-list"></ul>
             </div>
         </div>
     </div>
@@ -151,32 +143,29 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Extract the ID from the URL path
         const pathParts = window.location.pathname.split('/');
-        const authorId = pathParts[pathParts.length - 1]; // Get the last part of the path
+        const authorId = pathParts[pathParts.length - 1];
 
-        if (!authorId) {
-            alert("Не указан ID автора в URL. Проверьте, что URL содержит ID, например: /authors/1");
-            return; // Stop execution if ID is missing
-        }
-
-        console.log("ID автора:", authorId); // For debugging purposes
-
-        // Fetch author profile data (including weather)
         fetch(`/api/v1/authors/${authorId}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Ошибка загрузки данных автора.");
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.weatherDTO) {
                     document.getElementById("weather-temp").textContent = `${data.weatherDTO.temperature}°C`;
                     document.getElementById("weather-desc").textContent = data.weatherDTO.description;
-                } else {
-                    document.getElementById("weather-temp").textContent = "Нет данных";
-                    document.getElementById("weather-desc").textContent = "Нет данных";
                 }
             })
-            .catch(error => console.error("Ошибка загрузки данных автора:", error));
+            .catch(error => {
+                console.error(error);
+                document.getElementById("weather-temp").textContent = "Данные недоступны";
+                document.getElementById("weather-desc").textContent = "Сервис временно недоступен";
+            });
 
-        // Handle "Show Books" button
+
         const showBooksButton = document.getElementById("show-books-btn");
         const booksContainer = document.getElementById("books-container");
         const booksList = document.getElementById("books-list");
@@ -185,11 +174,15 @@
             if (booksContainer.style.display === "none") {
                 booksContainer.style.display = "block";
 
-                // Fetch author books
                 fetch(`/api/v1/books/author/${authorId}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Ошибка загрузки списка книг.");
+                        }
+                        return response.json();
+                    })
                     .then(books => {
-                        booksList.innerHTML = ""; // Clear the list before adding new data
+                        booksList.innerHTML = "";
                         if (books.length === 0) {
                             booksList.innerHTML = "<li>У автора пока нет книг.</li>";
                         } else {
@@ -200,7 +193,10 @@
                             });
                         }
                     })
-                    .catch(error => console.error("Ошибка загрузки книг:", error));
+                    .catch(error => {
+                        console.error(error);
+                        booksList.innerHTML = "<li>Ошибка загрузки книг.</li>";
+                    });
             } else {
                 booksContainer.style.display = "none";
             }

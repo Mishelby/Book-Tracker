@@ -1,10 +1,9 @@
 package org.example.booktracker.utils;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Getter
-@AllArgsConstructor
-public class CityRequest {
-    private String city;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record CityRequest(
+        String name
+) {
 }

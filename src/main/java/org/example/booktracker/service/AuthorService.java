@@ -2,7 +2,6 @@ package org.example.booktracker.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.booktracker.domain.author.AuthorProfileDto;
-import org.example.booktracker.domain.city.CityDto;
 import org.example.booktracker.exception.AuthorNotFoundException;
 import org.example.booktracker.exception.BookNotFoundException;
 import org.example.booktracker.mapper.AuthorBookMapper;
@@ -11,7 +10,6 @@ import org.example.booktracker.repository.AuthorRepository;
 import org.example.booktracker.repository.BookRepository;
 import org.example.booktracker.utils.*;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,16 +21,13 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class AuthorService {
     final Logger logger = Logger.getLogger(AuthorService.class.getName());
-
     // Repository
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
-
     // Mappers
     private final AuthorBookMapper authorBookMapper;
-
     // Utils
-    private final WeatherService weatherService;
+    private final WeatherServiceClient  weatherServiceClient;
     private final UtilsMethods utilsMethods;
     private final SuccessCreatedMapper successCreatedMapper;
 
@@ -43,10 +38,14 @@ public class AuthorService {
     ) {
         logger.info(() -> "Fetching author profile for id = %s:".formatted(id));
         var authorEntity = authorRepository.findById(id).orElseThrow();
-        var weatherDTO = weatherService.getWeather(
+        var weatherDTO = weatherServiceClient.getWeather(
                 new CityRequest(utilsMethods.getCityByAuthorId(id).name())
         );
 
+        logger.info(() -> "Count of books for author with id = %s, %s:"
+                .formatted(authorEntity.getId(), authorEntity.getBooks().size()));
+
+        // TODO Добавить статус автора в БД
         return new AuthorProfileDto(
                 authorEntity.getName(),
                 (long) authorEntity.getBooks().size(),
@@ -56,7 +55,7 @@ public class AuthorService {
     }
 
     @Transactional
-    @CacheEvict(value = "authorBooks", key = "#authorId")
+    @CacheEvict(value = {"authorBooks", "authorProfile"}, key = "#authorId")
     public SuccessCreated addBookForAuthor(
             Long authorId,
             Long bookId
