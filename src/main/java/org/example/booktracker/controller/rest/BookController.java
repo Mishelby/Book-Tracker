@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.booktracker.domain.authorBook.AuthorBookDto;
 import org.example.booktracker.domain.book.BookCreateDto;
+import org.example.booktracker.domain.book.MainBookInfoDto;
 import org.example.booktracker.service.BookService;
 import org.example.booktracker.utils.SuccessCreated;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,15 @@ import java.util.logging.Logger;
 public class BookController {
     final Logger logger = Logger.getLogger(BookController.class.getName());
     private final BookService bookService;
+
+    @GetMapping
+    public ResponseEntity<List<MainBookInfoDto>> getAllBooks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        logger.info(() -> "Get request for getting all books %s");
+        return ResponseEntity.ok().body(bookService.findAll(page, size));
+    }
 
     @PostMapping
     public ResponseEntity<SuccessCreated> addBook(

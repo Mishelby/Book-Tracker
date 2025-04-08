@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Книги и авторы</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+            color: #222;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .book {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .book-title {
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .book-genre {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .book-description {
+            margin-bottom: 10px;
+        }
+
+        .author {
+            font-size: 16px;
+            padding: 2px 0;
+        }
+
+        .loading {
+            text-align: center;
+            font-style: italic;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Книги и их авторы</h1>
+    <div id="book-list">
+        <div class="loading">Загрузка...</div>
+    </div>
+</div>
+
+<script>
+    fetch("/api/v1/books")
+        .then(response => response.json())
+        .then(data => {
+            const listContainer = document.getElementById("book-list");
+            listContainer.innerHTML = "";
+
+            data.forEach(book => {
+                const bookDiv = document.createElement("div");
+                bookDiv.className = "book";
+
+                const title = document.createElement("div");
+                title.className = "book-title";
+                title.textContent = book.name || "Без названия";
+
+                const genre = document.createElement("div");
+                genre.className = "book-genre";
+                genre.textContent = `Жанр: ${book.genre || "не указан"}`;
+
+                const description = document.createElement("div");
+                description.className = "book-description";
+                description.textContent = book.description || "Описание отсутствует";
+
+                const authorsLabel = document.createElement("div");
+                authorsLabel.textContent = "Авторы:";
+                const authors = document.createElement("div");
+                if (book.authors && book.authors.length > 0) {
+                    book.authors.forEach(author => {
+                        const authorDiv = document.createElement("div");
+                        authorDiv.className = "author";
+                        authorDiv.textContent = author;
+                        authors.appendChild(authorDiv);
+                    });
+                } else {
+                    const noAuthor = document.createElement("div");
+                    noAuthor.className = "author";
+                    noAuthor.textContent = "Авторы не указаны";
+                    authors.appendChild(noAuthor);
+                }
+
+                bookDiv.appendChild(title);
+                bookDiv.appendChild(genre);
+                bookDiv.appendChild(description);
+                bookDiv.appendChild(authorsLabel);
+                bookDiv.appendChild(authors);
+                listContainer.appendChild(bookDiv);
+            });
+        })
+        .catch(error => {
+            document.getElementById("book-list").innerHTML = "<div class='loading'>Ошибка загрузки данных</div>";
+            console.error("Ошибка при получении данных:", error);
+        });
+</script>
+</body>
+</html>

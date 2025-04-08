@@ -1,5 +1,5 @@
 package org.example.booktracker.utils;
 
-public interface WeatherServiceResponse {
+public interface WeatherServiceResponse  {
 
 }

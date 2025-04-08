@@ -1,6 +1,7 @@
 package org.example.booktracker.domain.author;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import java.util.List;
 

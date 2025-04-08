@@ -4,9 +4,12 @@ import org.example.booktracker.domain.authorBook.AuthorBookDto;
 import org.example.booktracker.domain.authorBook.AuthorBookEntity;
 import org.example.booktracker.domain.book.BookCreateDto;
 import org.example.booktracker.domain.book.BookEntity;
+import org.example.booktracker.domain.book.BookGenre;
+import org.example.booktracker.domain.book.MainBookInfoDto;
 import org.example.booktracker.domain.bookGenre.BookGenreEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.TargetType;
 
 import java.util.ArrayList;
@@ -32,4 +35,30 @@ public interface BookMapper {
     @Mapping(target = "name", source = "bookEntity.name")
     @Mapping(target = "article", source = "bookEntity.article")
     AuthorBookDto toDto(BookEntity bookEntity, Long countOfBooks);
+
+    @Mapping(target = "name", source = "bookEntity.name")
+    @Mapping(target = "description", source = "bookEntity.description")
+    @Mapping(target = "authors", expression = "java(validAuthors(authors))")
+    MainBookInfoDto toDto(BookEntity bookEntity, List<String> authors);
+
+    default List<String> validAuthors(List<String> authors){
+        return authors.isEmpty() ? List.of("Неизвестный автор!") : authors;
+    }
+
+    default void getGenreName(
+            @MappingTarget MainBookInfoDto mainBookInfoDto,
+            BookEntity bookEntity
+    ) {
+        var genre = mainBookInfoDto.getGenre();
+        if(genre== null || genre.isEmpty()){
+            mainBookInfoDto.setGenre(mapGenreToString(bookEntity.getGenre()));
+        }
+    }
+
+    default String mapGenreToString(BookGenreEntity bookGenre) {
+        if(bookGenre != null && bookGenre.getBookGenre() != null){
+            return bookGenre.getBookGenre().getName();
+        }
+        return "Unknown genre!";
+    }
 }

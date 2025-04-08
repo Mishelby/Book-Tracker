@@ -2,17 +2,26 @@ package org.example.booktracker.repository;
 
 import org.example.booktracker.domain.authorBook.AuthorBookEntity;
 import org.example.booktracker.domain.book.BookEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Long> {
+
+    @EntityGraph(attributePaths = {"authors", "genre"})
+    @Query("""
+            SELECT b
+            FROM BookEntity b                                    
+            """)
+    List<BookEntity> findAllBooks(PageRequest pageable);
 
     @Query("""
             SELECT (COUNT(*) > 0)

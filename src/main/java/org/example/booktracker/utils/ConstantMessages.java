@@ -7,7 +7,8 @@ public enum ConstantMessages {
     USER_SUCCESS_CREATED("User successfully created!"),
     BOOK_SUCCESS_CREATED("Book successfully created!"),
     BOOK_SUCCESS_ADDED("Book successfully added!"),
-    START_MESSAGE(formatMessage("Добро пожаловать в книжный дом! %s"));
+    START_MESSAGE(formatMessage("Добро пожаловать в книжный дом! %s")),
+    WEATHER_SERVICE_UNAVAILABLE("Сервис погоды временно недоступен!");
 
     final String description;
     static final String MESSAGE = "Мы занимаемся распространением знаний!";

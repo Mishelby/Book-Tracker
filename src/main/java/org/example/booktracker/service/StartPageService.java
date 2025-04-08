@@ -49,7 +49,7 @@ public class StartPageService {
     public StartPageDto getStartPage() {
         logger.info(() -> "Collecting information about starting page");
 
-        return new StartPageDto(
+        StartPageDto startPageDto = new StartPageDto(
                 ConstantMessages.START_MESSAGE.getDescription(),
                 findBestAuthors(),
                 userRepository.countAllUsers().orElse(0L),
@@ -58,6 +58,9 @@ public class StartPageService {
                 getDailyQuote(),
                 getDailyQuotesList()
         );
+
+        logger.info(() -> "Finished collecting information about starting page %s". formatted(startPageDto));
+        return startPageDto;
     }
 
     private List<BestAuthorDto> findBestAuthors() {
@@ -69,8 +72,7 @@ public class StartPageService {
                     var authorRating = authorRatingRepository.findRatingByAuthorId(author.getId()).orElse(0.0);
                     var bestBooks = bookRepository.findBestBooks(author.getId()).orElse(new ArrayList<>());
                     return authorMapper.toDto(author, authorRating, bestBooks);
-                })
-                .toList();
+                }).toList();
     }
 
     private String getDailyQuote() {

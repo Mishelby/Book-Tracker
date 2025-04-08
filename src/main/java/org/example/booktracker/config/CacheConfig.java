@@ -19,7 +19,8 @@ public class CacheConfig {
                 "weather",
                 "authorBooks",
                 "userProfile",
-                "startPage"
+                "startPage",
+                "allBooks"
         );
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .recordStats()

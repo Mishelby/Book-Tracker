@@ -1,10 +1,27 @@
 spring:
   application:
     name: BookTracker
+
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
     cache: false
+
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health,info,metrics,caches
+    metrics:
+      enable:
+        redis: true
 
   logging:
     level:
@@ -15,6 +32,10 @@ spring:
     url: jdbc:postgresql://localhost:5434/books
     username: postgresql
     password: mysecretpassword
+
+  devtools:
+    restart:
+      enabled: false
 
   jpa:
     properties:

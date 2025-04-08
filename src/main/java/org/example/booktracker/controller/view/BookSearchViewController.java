@@ -19,7 +19,7 @@ import java.util.List;
 public class BookSearchViewController {
     private final GoogleBookServiceClient googleBookService;
 
-    // Constant
+    // Constants
     private static final String RESULT = "book-search";
 
     @GetMapping

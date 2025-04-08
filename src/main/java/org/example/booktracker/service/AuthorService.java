@@ -45,7 +45,6 @@ public class AuthorService {
         logger.info(() -> "Count of books for author with id = %s, %s:"
                 .formatted(authorEntity.getId(), authorEntity.getBooks().size()));
 
-        // TODO Добавить статус автора в БД
         return new AuthorProfileDto(
                 authorEntity.getName(),
                 (long) authorEntity.getBooks().size(),
