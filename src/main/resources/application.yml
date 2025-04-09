@@ -7,12 +7,12 @@ spring:
     suffix: .html
     cache: false
 
-  cache:
-    type: redis
-  data:
-    redis:
-      host: localhost
-      port: 6379
+#  cache:
+#    type: redis
+#  data:
+#    redis:
+#      host: localhost
+#      port: 6379
 
   management:
     endpoints:
@@ -65,3 +65,6 @@ spring:
     service:
       url: http://localhost:8082
 
+  post:
+    service:
+      url: http://localhost:8083

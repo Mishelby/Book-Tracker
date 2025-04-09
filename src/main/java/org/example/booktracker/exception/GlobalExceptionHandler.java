@@ -30,4 +30,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorMessageResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(
+            value = {
+                    PostServiceException.class,
+                    PostValidationException.class
+            }
+    )
+    public ResponseEntity<ErrorMessageResponse> handleException(
+            RuntimeException exception
+    ) {
+        var errorMessageResponse = new ErrorMessageResponse(
+                exception.getMessage(),
+                LocalDateTime.now().toString()
+        );
+        return new ResponseEntity<>(errorMessageResponse, HttpStatus.BAD_REQUEST);
+    }
+
 }

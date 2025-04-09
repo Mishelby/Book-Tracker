@@ -17,7 +17,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AuthorMapper {
 
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "authorCreateDto.name")
     @Mapping(target = "password", source = "encodedPassword")

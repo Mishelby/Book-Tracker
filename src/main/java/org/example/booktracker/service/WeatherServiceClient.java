@@ -2,6 +2,7 @@ package org.example.booktracker.service;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.example.booktracker.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WeatherServiceClient {
     private final WebClient webClient;
 
+    @Autowired
     public WeatherServiceClient(
             @Value("${spring.weather.service.url}") String weatherServiceUrl
     ) {
