@@ -8,6 +8,7 @@ import org.example.booktracker.mapper.AuthorBookMapper;
 import org.example.booktracker.mapper.SuccessCreatedMapper;
 import org.example.booktracker.repository.AuthorRepository;
 import org.example.booktracker.repository.BookRepository;
+import org.example.booktracker.serviceClient.WeatherServiceClient;
 import org.example.booktracker.utils.*;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,7 +28,7 @@ public class AuthorService {
     // Mappers
     private final AuthorBookMapper authorBookMapper;
     // Utils
-    private final WeatherServiceClient  weatherServiceClient;
+    private final WeatherServiceClient weatherServiceClient;
     private final UtilsMethods utilsMethods;
     private final SuccessCreatedMapper successCreatedMapper;
 

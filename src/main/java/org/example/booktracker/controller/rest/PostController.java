@@ -2,7 +2,7 @@ package org.example.booktracker.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.booktracker.service.PostServiceClient;
+import org.example.booktracker.serviceClient.PostServiceClient;
 import org.example.booktracker.utils.ResponseDto;
 import org.example.booktracker.utils.SendPostDto;
 import org.springframework.http.ResponseEntity;

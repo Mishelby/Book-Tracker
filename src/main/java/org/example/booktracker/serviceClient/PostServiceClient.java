@@ -1,12 +1,9 @@
-package org.example.booktracker.service;
+package org.example.booktracker.serviceClient;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.example.booktracker.exception.PostServiceException;
 import org.example.booktracker.exception.PostValidationException;
-import org.example.booktracker.utils.PostServiceAvailable;
-import org.example.booktracker.utils.ResponseDto;
-import org.example.booktracker.utils.ResponseForDto;
-import org.example.booktracker.utils.SendPostDto;
+import org.example.booktracker.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
@@ -37,13 +34,11 @@ public class PostServiceClient {
                 .bodyValue(sendPostDto)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse ->
-                        clientResponse.bodyToMono(String.class).flatMap(
-                                error -> Mono.error(new PostValidationException(error))
-                        )
+                        clientResponse.bodyToMono(String.class)
+                                .flatMap(error -> Mono.error(new PostValidationException(error)))
                 ).onStatus(HttpStatusCode::is5xxServerError, clientResponse ->
-                        clientResponse.bodyToMono(String.class).flatMap(
-                                error -> Mono.error(new PostServiceException(error))
-                        ))
+                        clientResponse.bodyToMono(String.class)
+                                .flatMap(error -> Mono.error(new PostServiceException(error))))
                 .bodyToMono(ResponseDto.class)
                 .block();
     }
@@ -54,15 +49,15 @@ public class PostServiceClient {
     ) {
         if (t instanceof PostValidationException) {
             return new PostServiceAvailable(
-                    "Ошибка валидации: " + t.getMessage(),
+                    "Ошибка валидации: %s".formatted(t.getMessage()),
                     "Проверьте данные",
                     LocalDateTime.now()
             );
         }
 
         return new PostServiceAvailable(
-                "Сервис постов в данный момент недоступен! Повторите попытку позже",
-                "Ведутся технические работы",
+                ConstantMessages.POST_SERVICE_UNAVAILABLE_MESSAGE.getDescription(),
+                ConstantMessages.POST_SERVICE_UNAVAILABLE_STATUS.getDescription(),
                 LocalDateTime.now()
         );
     }

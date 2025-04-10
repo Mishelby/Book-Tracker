@@ -68,3 +68,7 @@ spring:
   post:
     service:
       url: http://localhost:8083
+
+  comment:
+    service:
+      url: http://localhost:8083

@@ -1,4 +1,4 @@
-package org.example.booktracker.service;
+package org.example.booktracker.serviceClient;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.example.booktracker.utils.*;

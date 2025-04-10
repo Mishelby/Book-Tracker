@@ -36,6 +36,7 @@
             width: 350px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: left;
         }
 
         h2 {
@@ -49,7 +50,7 @@
             background: #f1f3f5;
             border-radius: 8px;
             text-align: left;
-            position: relative; /* Добавим относительное позиционирование */
+            position: relative;
         }
 
         .sun {
@@ -58,7 +59,7 @@
             right: -70px;
             width: 100px;
             height: 100px;
-            background: #ffeb3b; /* Ярко-желтое солнце */
+            background: #ffeb3b;
             border-radius: 50%;
             box-shadow: 0 0 15px rgba(255, 235, 59, 0.6);
             animation: glow 2s ease-in-out infinite;
@@ -109,6 +110,61 @@
         .show-books-btn:hover {
             background: #005ecb;
         }
+
+        /* Стили для формы создания поста */
+        .form-container {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .form-card {
+            background: #ffffff;
+            padding: 25px;
+            width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .form-card h2 {
+            color: #007aff;
+            margin-bottom: 15px;
+            font-size: 22px;
+            font-weight: normal;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            background: #f9f9f9;
+        }
+
+        .input-field:focus {
+            border-color: #007aff;
+            outline: none;
+            background: #fff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-btn:hover {
+            background-color: #005ecb;
+        }
+
     </style>
 </head>
 <body>
@@ -137,12 +193,73 @@
                 <h3>📚 Книги автора:</h3>
                 <ul id="books-list"></ul>
             </div>
+
+            <div class="form-container">
+                <div class="form-card">
+                    <h2>Создайте новый пост</h2>
+                    <form id="createPostForm">
+                        <!-- Поле для названия поста -->
+                        <input type="text" id="postName" class="input-field" placeholder="Название поста" required>
+
+                        <!-- Поле для описания -->
+                        <textarea id="description" class="input-field" rows="4" placeholder="Описание" required></textarea>
+
+                        <!-- Скрытое поле для userId, которое будет заполнено с помощью JavaScript -->
+                        <input type="hidden" id="userId">
+
+                        <!-- Кнопка отправки формы -->
+                        <button type="submit" class="submit-btn">Создать пост</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </main>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
+        const pathParts1 = window.location.pathname.split('/');
+        const userId = pathParts1[pathParts1.length - 1];
+
+        // Заполняем скрытое поле userId
+        document.getElementById("userId").value = userId;
+
+        // Обработчик отправки формы
+        document.getElementById("createPostForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Останавливаем обычную отправку формы
+
+            // Получаем значения полей формы
+            const postName = document.getElementById("postName").value;
+            const description = document.getElementById("description").value;
+            const userId = document.getElementById("userId").value;
+
+            // Формируем данные для отправки
+            const postData = {
+                userId: userId,
+                postName: postName,
+                description: description
+            };
+
+            // Отправляем данные на сервер через fetch
+            fetch('/api/v1/post', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Пост успешно создан!");
+                    // Дополнительная логика, например, редирект на страницу с постом
+                })
+                .catch(error => {
+                    console.error("Ошибка создания поста:", error);
+                    alert("Произошла ошибка при создании поста.");
+                });
+        });
+
         const pathParts = window.location.pathname.split('/');
         const authorId = pathParts[pathParts.length - 1];
 

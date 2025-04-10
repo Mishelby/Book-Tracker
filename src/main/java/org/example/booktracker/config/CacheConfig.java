@@ -20,7 +20,9 @@ public class CacheConfig {
                 "authorBooks",
                 "userProfile",
                 "startPage",
-                "allBooks"
+                "allBooks",
+                "googleBooks",
+                "lastNComments"
         );
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .recordStats()

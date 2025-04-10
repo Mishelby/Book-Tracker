@@ -2,7 +2,7 @@ package org.example.booktracker.controller.view;
 
 import lombok.RequiredArgsConstructor;
 import org.example.booktracker.domain.book.GoogleBookDto;
-import org.example.booktracker.service.GoogleBookServiceClient;
+import org.example.booktracker.serviceClient.GoogleBookServiceClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
