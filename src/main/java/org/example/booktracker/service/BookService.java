@@ -2,23 +2,22 @@ package org.example.booktracker.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.booktracker.domain.authorBook.AuthorBookDto;
-import org.example.booktracker.domain.authorBook.AuthorBookEntity;
 import org.example.booktracker.domain.book.BookCreateDto;
 import org.example.booktracker.domain.book.BookEntity;
 import org.example.booktracker.domain.book.BookGenre;
 import org.example.booktracker.domain.book.MainBookInfoDto;
+import org.example.booktracker.exception.BookNotFoundException;
 import org.example.booktracker.mapper.SuccessCreatedMapper;
 import org.example.booktracker.mapper.BookMapper;
 import org.example.booktracker.repository.BookRepository;
+import org.example.booktracker.serviceClient.FavoriteBookClientService;
 import org.example.booktracker.utils.ConstantMessages;
 import org.example.booktracker.utils.SuccessCreated;
 import org.example.booktracker.utils.UtilsMethods;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +33,7 @@ public class BookService {
     final Logger logger = Logger.getLogger(BookService.class.getName());
     private final BookRepository bookRepository;
     private final GenreInitializeService genreInitializeService;
+    private final FavoriteBookClientService favoriteBookClientService;
 
     // Mappers
     private final SuccessCreatedMapper successCreatedMapper;
@@ -62,8 +62,65 @@ public class BookService {
                             .map(author -> author.getAuthor().getName())
                             .toList();
                     return bookMapper.toDto(book, authorNames);
-                })
-                .toList();
+                }).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public MainBookInfoDto findBookById(
+            Long bookId
+    ) {
+        var bookEntity = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException("Книга с id %s не найдена!".formatted(bookId)));
+
+        return bookMapper.toDto(
+                bookEntity,
+                bookEntity.getAuthors()
+                        .stream()
+                        .map(author -> author.getAuthor().getName())
+                        .toList()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<MainBookInfoDto> findFavoriteUserBooks(Long userId) {
+        var booksById = bookRepository.findBooksById(
+                favoriteBookClientService.userFavoriteBooks(userId)
+        );
+        if (booksById.isEmpty()) return Collections.emptyList();
+
+        return booksById.stream()
+                .map(book -> {
+                    var authorNames = book.getAuthors().stream()
+                            .map(author -> author.getAuthor().getName())
+                            .toList();
+                    return bookMapper.toDto(book, authorNames);
+                }).toList();
+    }
+
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "bookByName", key = "#name")
+    public List<MainBookInfoDto> findByName(
+            final String name,
+            int page,
+            int size
+    ) {
+        var pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.ASC, "id")
+        );
+
+        var booksByPrefix = bookRepository.findByPrefix(name, pageRequest);
+        if (booksByPrefix.isEmpty()) return Collections.emptyList();
+
+        return booksByPrefix.stream()
+                .map(book -> {
+                    var authorNames = book.getAuthors()
+                            .stream()
+                            .map(author -> author.getAuthor().getName())
+                            .toList();
+                    return bookMapper.toDto(book, authorNames);
+                }).toList();
     }
 
     @Transactional
@@ -71,6 +128,7 @@ public class BookService {
             @CacheEvict(value = "startPage", allEntries = true),
             @CacheEvict(value = "allBooks", allEntries = true),
             @CacheEvict(value = "authorBooks", allEntries = true),
+            @CacheEvict(value = "bookByName", allEntries = true),
     })
     public SuccessCreated saveBook(
             BookCreateDto bookDto

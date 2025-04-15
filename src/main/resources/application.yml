@@ -57,6 +57,22 @@ spring:
           starttls.enable: true
           ssl.enable: false
 
+  circuitbreaker:
+    instances:
+      favoriteBooks:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10
+
+  resilience4j:
+    retry:
+      instances:
+        favoriteBooks:
+          max-attempts: 3
+          wait-duration: 500ms
+          retry-exceptions:
+            - org.springframework.web.reactive.function.client.WebClientRequestException
+
   weather:
     service:
       url: http://localhost:8081
@@ -72,3 +88,7 @@ spring:
   comment:
     service:
       url: http://localhost:8083
+
+  favorite-book:
+    service:
+      url: http://localhost:8084

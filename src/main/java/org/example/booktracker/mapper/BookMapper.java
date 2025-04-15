@@ -38,6 +38,7 @@ public interface BookMapper {
 
     @Mapping(target = "name", source = "bookEntity.name")
     @Mapping(target = "description", source = "bookEntity.description")
+    @Mapping(target = "rating", expression = "java(bookEntity.getRating().getRating())")
     @Mapping(target = "authors", expression = "java(validAuthors(authors))")
     MainBookInfoDto toDto(BookEntity bookEntity, List<String> authors);
 

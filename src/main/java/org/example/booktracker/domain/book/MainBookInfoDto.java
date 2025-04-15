@@ -21,4 +21,5 @@ public class MainBookInfoDto {
     String genre;
     @JsonDeserialize(as = ArrayList.class)
     List<String> authors;
+    Float rating;
 }

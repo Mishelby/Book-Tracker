@@ -2,6 +2,7 @@ package org.example.booktracker.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.example.booktracker.domain.author.AuthorEntity;
 import org.example.booktracker.domain.authorRating.AuthorRatingEntity;
 import org.example.booktracker.evenListener.EmailEvent;
 import org.example.booktracker.domain.author.AuthorCreateDto;
@@ -59,19 +60,30 @@ public class AuthorRegistrationService {
                 cityEntity
         ));
 
+        saveAuthorRating(savedAuthor);
+        publishEmailEvent(savedAuthor);
+
+        return getSuccessCreated(savedAuthor);
+    }
+
+    private void saveAuthorRating(AuthorEntity savedAuthor) {
         authorRatingRepository.save(
                 new AuthorRatingEntity(savedAuthor.getId(),
                         DefaultValues.getDefaultRating())
         );
+    }
 
+    private void publishEmailEvent(AuthorEntity savedAuthor) {
         eventPublisher.publishEvent(
-                new EmailEvent(
-                        this,
+                new EmailEvent(this,
                         "Sending message for email",
-                        savedAuthor.getEmail()
-                )
+                        savedAuthor.getEmail())
         );
+    }
 
+    private SuccessCreated getSuccessCreated(
+            AuthorEntity savedAuthor
+    ) {
         return successCreatedMapper.toSuccessCreated(
                 savedAuthor.toString(),
                 ConstantMessages.USER_SUCCESS_CREATED.getDescription(),

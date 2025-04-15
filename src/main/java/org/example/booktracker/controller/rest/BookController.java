@@ -30,6 +30,24 @@ public class BookController {
         return ResponseEntity.ok().body(bookService.findAll(page, size));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<MainBookInfoDto> getBookById(
+            @PathVariable("id") Long bookId
+    ) {
+        logger.info(() -> "Get request for getting book by id %s".formatted(bookId));
+        return ResponseEntity.ok().body(bookService.findBookById(bookId));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<MainBookInfoDto>> getBookByName(
+            @RequestParam("name") String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        logger.info(() -> "Get request for getting books by name %s".formatted(name));
+        return ResponseEntity.ok().body(bookService.findByName(name, page, size));
+    }
+
     @PostMapping
     public ResponseEntity<SuccessCreated> addBook(
             @RequestBody BookCreateDto bookDto
@@ -45,4 +63,5 @@ public class BookController {
         logger.info(() -> "Get request for author books with id = %s".formatted(id));
         return ResponseEntity.ok().body(bookService.getAuthorBooks(id));
     }
+
 }

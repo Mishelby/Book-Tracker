@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.example.booktracker.domain.authorBook.AuthorBookEntity;
 import org.example.booktracker.domain.bookGenre.BookGenreEntity;
+import org.example.booktracker.domain.bookRatingEntity.BookRatingEntity;
 
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class BookEntity {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AuthorBookEntity> authors;
 
+    @OneToOne(mappedBy = "book", cascade = CascadeType.ALL)
+    private BookRatingEntity rating;
+
     public BookEntity(
             String name,
             String description,
@@ -45,5 +49,6 @@ public class BookEntity {
         this.genre = bookGenreEntity;
     }
 
-    public BookEntity() {}
+    public BookEntity() {
+    }
 }

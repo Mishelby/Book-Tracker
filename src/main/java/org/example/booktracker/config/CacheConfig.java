@@ -22,8 +22,10 @@ public class CacheConfig {
                 "startPage",
                 "allBooks",
                 "googleBooks",
-                "lastNComments"
+                "lastNComments",
+                "bookByName"
         );
+        cacheManager.setAsyncCacheMode(true);
         cacheManager.setCaffeine(Caffeine.newBuilder()
                 .recordStats()
                 .expireAfterWrite(30, TimeUnit.MINUTES)

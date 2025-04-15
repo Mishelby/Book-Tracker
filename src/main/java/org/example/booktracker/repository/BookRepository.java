@@ -19,9 +19,22 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
     @EntityGraph(attributePaths = {"authors", "genre"})
     @Query("""
             SELECT b
-            FROM BookEntity b                                    
+            FROM BookEntity b      
+            LEFT JOIN FETCH b.rating
             """)
     List<BookEntity> findAllBooks(PageRequest pageable);
+
+    @EntityGraph(attributePaths = {"authors"})
+    @Query("""
+            SELECT b
+            FROM BookEntity b
+            LEFT JOIN FETCH b.genre
+            WHERE LOWER(b.name) LIKE LOWER(CONCAT(:prefix, '%'))                        
+            """)
+    List<BookEntity> findByPrefix(
+            @Param("prefix") String prefix,
+            PageRequest pageable
+    );
 
     @Query("""
             SELECT (COUNT(*) > 0)
@@ -72,4 +85,12 @@ public interface BookRepository extends JpaRepository<BookEntity, Long> {
             WHERE abe.author.id = :authorId                            
             """)
     Optional<List<String>> findBestBooks(Long authorId);
+
+    @EntityGraph(attributePaths = {"authors", "genre"})
+    @Query("""
+            SELECT b
+            FROM BookEntity b
+            WHERE b.id IN (:bookIds)         
+            """)
+    List<BookEntity> findBooksById(List<Long> bookIds);
 }

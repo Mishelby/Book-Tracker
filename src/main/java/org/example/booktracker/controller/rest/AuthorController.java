@@ -11,9 +11,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.example.booktracker.serviceClient.CommentClientService;
+import org.example.booktracker.utils.CommentDto;
+import org.example.booktracker.utils.DefaultCommentDto;
 import org.example.booktracker.utils.SuccessCreated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -23,7 +26,6 @@ public class AuthorController {
     final Logger logger = Logger.getLogger(AuthorController.class.getName());
     private final AuthorService authorService;
     private final CommentClientService commentClientService;
-
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorProfileDto> getAuthorProfile(
@@ -36,10 +38,11 @@ public class AuthorController {
     @GetMapping("/{id}/comments")
     public ResponseEntity<LastNCommentsDto> getComment(
             @PathVariable("id") Long userId,
-            @RequestParam Long count
+            @RequestParam(name = "count", defaultValue = "5") Long count
     ) {
-        logger.info(() -> "Get request for last %s comment with id = %s".formatted(userId, count));
-        return ResponseEntity.ok().body(commentClientService.getNLastComments(userId, count));
+        logger.info(() -> "Get request for last %s comment with id = %s".formatted(count, userId));
+        return ResponseEntity.ok().body(commentClientService.getNLastComments(userId, count)
+                .block());
     }
 
     @PostMapping("/{id}/{book_id}")
@@ -50,5 +53,13 @@ public class AuthorController {
         logger.info(() -> "Post request for adding book with id = %s for author with id = %s "
                 .formatted(authorId, bookId));
         return ResponseEntity.ok().body(authorService.addBookForAuthor(authorId, bookId));
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<CommentDto> sendComment(
+            @RequestBody DefaultCommentDto defaultCommentDto
+    ) {
+        logger.info(() -> "Post request for send comment %s".formatted(defaultCommentDto));
+        return ResponseEntity.ok().body(commentClientService.sendComment(defaultCommentDto));
     }
 }
